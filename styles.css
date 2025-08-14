@@ -1,0 +1,81 @@
+/* =========================
+   Global + Layout
+   ========================= */
+:root{
+  --bg:#fafafa; --ink:#111; --muted:#6b7280; --card:#fff; --line:#e5e7eb;
+  --acc:#2563eb; --danger:#b91c1c; --pill:#f3f4f6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font:16px/1.45 system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{max-width:980px;margin:28px auto 0;padding:0 16px}
+header h1{font-size:28px;margin:0 0 6px}
+header .tag{font-weight:600;font-size:.8rem;color:#fff;background:var(--ink);padding:2px 8px;border-radius:999px}
+header p{margin:6px 0 0;color:var(--muted)}
+main{max-width:980px;margin:16px auto;padding:0 16px}
+footer{max-width:980px;margin:14px auto 40px;padding:0 16px;color:var(--muted)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.card h2{margin:0 0 10px;font-size:20px}
+
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:780px){.grid2{grid-template-columns:1fr}}
+.group{display:grid;gap:10px}
+label{display:flex;align-items:center;gap:10px}
+label>input[type="range"],label>input[type="number"],select{flex:1}
+
+.small{color:var(--muted);font-size:.9rem}
+audio{width:100%}
+
+/* =========================
+   Buttons, Pills, File
+   ========================= */
+button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+button:disabled{opacity:.6;cursor:not-allowed}
+.pill{background:var(--pill);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#111;color:#fff;border-radius:6px;padding:1px 6px;font-size:.8rem}
+.danger{background:#fff;border:1px solid var(--danger);color:var(--danger);border-radius:8px;padding:6px 10px}
+
+label.file{position:relative;overflow:hidden}
+label.file input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+label.file>span{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fff}
+
+/* =========================
+   Piano
+   ========================= */
+.piano-wrap{padding:8px;border:1px dashed var(--line);border-radius:12px;background:#f9fafb}
+.piano{position:relative;display:flex;align-items:flex-end;height:220px;user-select:none}
+
+/* White keys (container for each black key) */
+.white{
+  position:relative;
+  width:44px; height:200px;
+  background:#fff;
+  border:1px solid #d1d5db;
+  border-bottom:3px solid #d1d5db;
+  border-radius:0 0 8px 8px;
+  box-shadow:inset 0 -8px 12px rgba(0,0,0,.04);
+}
+
+/* Black keys (absolutely positioned ON TOP inside the parent white key) */
+.black{
+  position:absolute; top:0; left:30px;
+  width:28px; height:120px;
+  background:#0a0a0a; color:#eee;
+  border:1px solid #111;
+  border-radius:0 0 6px 6px;
+  z-index:3; /* ensure blacks sit above whites */
+  box-shadow:inset 0 -6px 10px rgba(0,0,0,.4);
+}
+
+/* Labels – never block clicks */
+.white .label,.black .label{
+  position:absolute; left:0; right:0; bottom:6px;
+  text-align:center; font-size:.72rem;
+  pointer-events:none;
+  color:#374151;
+}
+.black .label{color:#e5e7eb}
+
+/* Playing state highlight */
+.white.playing,.black.playing{box-shadow:inset 0 0 0 3px var(--acc)}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Song → Synth (WebAudio)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Song → Synth <span class="tag">WebAudio</span></h1>
+  <p>Upload a short <em>single‑instrument</em> clip. We’ll learn its timbre (spectral envelope) and apply it to a tweakable synth. Then play on a piano.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>1) Load & Listen</h2>
+    <div class="row">
+      <label class="file"><input id="file" type="file" accept="audio/*"><span>Choose File</span></label>
+      <button id="enable">Enable Audio</button>
+      <button id="play-original" disabled>Play</button>
+      <button id="pause-original" disabled>Pause</button>
+      <span class="pill" id="status">No file loaded</span>
+    </div>
+    <audio id="player" controls></audio>
+  </section>
+
+  <section class="card">
+    <h2>2) Synth</h2>
+    <div class="grid2">
+      <div class="group">
+        <label>Wave
+          <select id="wave">
+            <option>Sine</option>
+            <option selected>Saw</option>
+            <option>Square</option>
+            <option>Triangle</option>
+          </select>
+        </label>
+        <label>Unison <input id="unison" type="number" min="1" max="8" value="1"></label>
+        <label>Detune (cents) <input id="detune" type="range" min="-50" max="50" value="8"><span class="kbd" id="detune-v">8</span></label>
+      </div>
+      <div class="group">
+        <label>LPF Cutoff (Hz) <input id="cutoff" type="range" min="100" max="16000" value="8000"><span class="kbd" id="cutoff-v">8000</span></label>
+        <label>LPF Q <input id="q" type="range" min="0.1" max="20" step="0.1" value="8"><span class="kbd" id="q-v">8.0</span></label>
+      </div>
+      <div class="group">
+        <label>Attack (ms) <input id="attack" type="range" min="0" max="1000" value="10"><span class="kbd" id="attack-v">10</span></label>
+        <label>Decay (ms) <input id="decay" type="range" min="0" max="2000" value="120"><span class="kbd" id="decay-v">120</span></label>
+        <label>Sustain <input id="sustain" type="range" min="0" max="1" step="0.01" value="0.7"><span class="kbd" id="sustain-v">0.70</span></label>
+        <label>Release (ms) <input id="release" type="range" min="10" max="3000" value="400"><span class="kbd" id="release-v">400</span></label>
+      </div>
+      <div class="group">
+        <label>Velocity <input id="velocity" type="range" min="0.1" max="1" step="0.01" value="0.9"><span class="kbd" id="velocity-v">0.90</span></label>
+        <label class="check"><input id="hold" type="checkbox"><span>Sustain Pedal</span></label>
+        <button id="panic" class="danger">PANIC — All Notes Off</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3) Learn Timbre → EQ</h2>
+    <div class="row">
+      <button id="learn" disabled>Learn Timbre</button>
+      <button id="bypass-eq" disabled>EQ Bypass OFF</button>
+      <button id="flat-eq" disabled>Flat EQ</button>
+      <span id="learn-status" class="small">—</span>
+    </div>
+    <div class="small">Picks a steady 0.5s window, analyzes 8 bands (100–12k Hz), sets peaking EQ gains. Works best for clean sustained notes.</div>
+  </section>
+
+  <section class="card">
+    <h2>4) Piano</h2>
+    <div class="piano-wrap">
+      <div id="piano" class="piano"></div>
+    </div>
+    <div class="small">Click keys (C3..B5). Labeled. Left→right pitch increases.</div>
+  </section>
+</main>
+
+<footer>
+  <span>Song → Synth • WebAudio build</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
