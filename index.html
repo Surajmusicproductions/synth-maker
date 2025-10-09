@@ -16,6 +16,8 @@
       --accent-blue: #38b6ff;
       --accent-pink: #f472b6;
       --accent-yellow: #fde047;
+      --accent-purple: #a78bfa;
+      --accent-red: #f43f5e;
     }
     html {
       overflow-y: auto;
@@ -29,7 +31,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+      overflow-x: hidden;
     }
     /* Start Overlay for user interaction */
     #start-overlay {
@@ -77,16 +79,23 @@
       width: 100%;
       visibility: hidden; /* Hide until app starts */
     }
-    .landscape-container {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 30px;
-      padding-bottom: 20px;
-      transform-origin: top left;
-      transition: transform 0.2s ease-out;
-      width: max-content;
+
+    /* --- NEW LAYOUT CONTAINERS --- */
+    .pedal-board-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
     }
+    .main-pedals-container, .control-pedals-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        width: 100%;
+    }
+
 
     /* --- Header --- */
     .header {
@@ -94,6 +103,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     .header h1 {
         font-size: 1.5rem;
@@ -120,10 +131,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 280px;
+      width: 280px;
       min-height: 480px;
       box-sizing: border-box;
       border-top: 5px solid transparent;
+      transition: box-shadow 0.2s ease;
     }
     .pedal-unit h4 {
       font-size: 1.15em;
@@ -139,7 +151,7 @@
     .before-fx-pedal {
       border-top-color: var(--accent-green);
       justify-content: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     /* --- Looper Pedal --- */
@@ -252,6 +264,7 @@
       color: #e1e7fe;
       outline: none;
       cursor: pointer;
+      width: 90%;
     }
     .button-grid {
         display: grid;
@@ -314,25 +327,32 @@
     .before-fx-btn { background: #222b33; border: 2px solid var(--accent-green); color: #9fffe6; }
     .before-fx-btn.active { background: linear-gradient(90deg,#11ffbe 0%,#265cff 100%); color: #151a2a; border-color: #2dd4bf; box-shadow: 0 4px 24px #00ffc880; }
     .main-looper-btn { background: linear-gradient(90deg, #265cff 0%, #22ffe8 100%); color: #fff; }
-    .stop-btn { background: linear-gradient(90deg, #f43f5e 0%, #fbbf24 100%); color: #fff; }
+    .stop-btn { background: linear-gradient(90deg, var(--accent-red) 0%, #fbbf24 100%); color: #fff; }
     .fx-menu-btn { background: linear-gradient(90deg,var(--accent-yellow) 0%,var(--accent-blue) 100%); color: #2b2341; }
     .monitor-btn { background: linear-gradient(90deg,#00ffd0 0%,#214080 100%); color: #23263c; }
     .monitor-btn.active { background: linear-gradient(90deg,#fde047 0%,#ffb347 100%) !important; color: #443000 !important; }
     .btn:active { transform: scale(0.97); filter: brightness(1.15); }
     .disabled-btn { opacity: 0.55 !important; cursor: not-allowed !important; filter: grayscale(0.7); }
 
-    /* --- FX Control Pedal --- */
-    #fxControlContainer {
-        border-top-color: #818cf8;
-        justify-content: space-between;
+    /* --- FX Control & Auto FX Pedals --- */
+    #fxControlContainer, #fxControlContainer2 {
+        width: auto;
+        flex-grow: 1;
+        min-width: 400px;
+        max-width: 600px;
+        justify-content: flex-start;
     }
+    #fxControlContainer { border-top-color: var(--accent-purple); }
+    #fxControlContainer2 { border-top-color: var(--accent-red); }
+
     .fx-control-grid {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 15px;
         width: 100%;
         margin-bottom: 15px;
     }
+
     .fx-control-slider {
         display: flex;
         flex-direction: column;
@@ -364,12 +384,18 @@
         50% { background-color: #4a4a2c88; }
         100% { background-color: #1a202c88; }
     }
+     #mic-monitor-wrapper {
+        margin-top: auto;
+        width: 100%;
+        display: flex;
+        gap: 15px;
+    }
 
     /* --- Popups --- */
     .fx-popup { position: fixed; inset: 0; background: rgba(12,20,30,0.86); display: flex; align-items: center; justify-content: center; z-index: 9999; overflow-y: auto; padding: 1rem;}
-    .fx-popup-inner { background: #24293a; border-radius: 16px; padding: 26px; min-width: 320px; max-width: 94vw; box-shadow: 0 8px 48px #000a; color: #f1f8fa; }
+    .fx-popup-inner { background: #24293a; border-radius: 16px; padding: 26px; min-width: 320px; max-width: 94vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 48px #000a; color: #f1f8fa; }
     .fx-popup h3 { font-size: 1.22em; margin-top: 0; }
-    .fx-popup label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 1.07em; }
+    .fx-popup label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 1.07em; flex-wrap: wrap; }
     .fx-popup input[type="range"] { width: 60%; min-width: 98px; max-width: 240px; vertical-align: middle; accent-color: #2ed7ff; margin-left: 7px; }
     .fx-popup button { margin-right: 8px; margin-top: 12px; padding: 7px 22px; border-radius: 9px; border: none; font-weight: 700; font-size: 1.04em; background: linear-gradient(90deg,#22ffe8 0%,#265cff 100%); color: #23263c; cursor: pointer;}
     .fx-popup .btn-trigger { width: 100%; padding: 12px; margin-top: 15px; background: linear-gradient(90deg, #f43f5e 0%, #fbbf24 100%); color: #fff; font-size: 1.1em;}
@@ -395,10 +421,6 @@
     .hidden { display: none !important; }
 
     /* --- Automated FX Pedal --- */
-    #fxControlContainer2 {
-        border-top-color: #f43f5e; /* Give it a distinct color */
-        justify-content: space-between;
-    }
     .auto-slider-wrapper {
         display: grid;
         grid-template-columns: 40px 1fr; /* Column for buttons, column for slider */
@@ -471,43 +493,10 @@
         border-radius: 8px;
         cursor: crosshair;
         touch-action: none; /* Important for touch devices */
+        max-width: 100%;
+        height: auto;
     }
-    
-    /* --- Responsive Design --- */
-    @media (max-width: 1024px) {
-        body {
-            /* Allow vertical scrolling on mobile */
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .main-wrapper {
-            padding: 10px;
-        }
-        .landscape-container {
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            transform: none !important; /* Override zoom */
-            gap: 20px;
-        }
-        .pedal-unit {
-            width: 90%;
-            min-width: 90%;
-            max-width: 400px;
-            min-height: auto; /* Allow height to be determined by content */
-            padding: 20px;
-        }
-        .header h1 {
-            font-size: 1.2rem;
-        }
-        #bpmLabel {
-            font-size: 1rem;
-        }
-        .fx-popup-inner {
-            padding: 20px;
-            min-width: 90vw;
-        }
-    }
+
   </style>
 </head>
 <body>
@@ -525,131 +514,133 @@
       <span id="bpmLabel">BPM: --</span>
     </div>
 
-    <div class="landscape-container">
-      <!-- 1. Before FX -->
-      <div class="pedal-unit before-fx-pedal">
-        <h4>PRE-LOOP FX</h4>
-        <button class="btn before-fx-btn" id="fxBeforeBtn_delay">Delay</button>
-        <button class="btn before-fx-btn" id="fxBeforeBtn_reverb">Reverb</button>
-        <button class="btn before-fx-btn" id="fxBeforeBtn_pitch">Pitch Shift</button>
-        <button class="btn before-fx-btn" id="fxBeforeBtn_flanger">Flanger</button>
-        <button class="btn before-fx-btn" id="fxBeforeBtn_eq5">EQ (5 Band)</button>
+    <div class="pedal-board-wrapper">
+      <div class="main-pedals-container">
+        <!-- 1. Before FX -->
+        <div class="pedal-unit before-fx-pedal">
+          <h4>PRE-LOOP FX</h4>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_compressor">Compressor</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_distortion">Distortion</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_reverb">Reverb</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_delay">Delay</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_flanger">Flanger</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_phaser">Phaser</button>
+          <button class="btn before-fx-btn" id="fxBeforeBtn_eq5">EQ (5 Band)</button>
+        </div>
+
+        <!-- 2. Looper 1: Master -->
+        <div class="pedal-unit looper-pedal" id="looper1">
+          <div class="track-label">MASTER</div>
+          <div class="display-area">
+              <svg class="progress-ring"><circle id="progressBar1" r="46" cx="50" cy="50" /></svg>
+              <div class="looper-icon" id="looperIcon1">▶</div>
+          </div>
+          <div class="state-display" id="stateDisplay1">Ready</div>
+          <div class="controls-area">
+              <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider1" min="0" max="120" value="90" /><span id="volValue1">90%</span></label>
+              <div class="track-fx-labels" id="trackFxLabels1"></div>
+          </div>
+          <div class="button-grid">
+              <button class="btn main-looper-btn" id="mainLooperBtn1">Record</button>
+              <button class="btn stop-btn" id="stopBtn1">Stop/Clear</button>
+              <button class="btn fx-menu-btn" id="fxMenuBtn1">🎛 FX Menu</button>
+          </div>
+        </div>
+
+        <!-- 3. Looper 2 -->
+        <div class="pedal-unit looper-pedal" id="looper2">
+          <div class="track-label">TRACK 2</div>
+          <div class="display-area">
+              <svg class="progress-ring"><circle id="progressBar2" r="46" cx="50" cy="50" style="stroke: var(--accent-blue)"/></svg>
+              <div class="looper-icon" id="looperIcon2">▶</div>
+          </div>
+          <div class="state-display" id="stateDisplay2">Ready</div>
+          <div class="controls-area">
+              <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider2" min="0" max="120" value="90" /><span id="volValue2">90%</span></label>
+              <div class="track-fx-labels" id="trackFxLabels2"></div>
+              <select id="divider2"><option value="1">x1</option><option value="0.5">x½</option><option value="2">x2</option></select>
+          </div>
+          <div class="button-grid">
+              <button class="btn main-looper-btn" id="mainLooperBtn2">Record</button>
+              <button class="btn stop-btn" id="stopBtn2">Stop/Clear</button>
+              <button class="btn fx-menu-btn" id="fxMenuBtn2">🎛 FX Menu</button>
+          </div>
+        </div>
+
+        <!-- 4. Looper 3 -->
+        <div class="pedal-unit looper-pedal" id="looper3">
+          <div class="track-label">TRACK 3</div>
+          <div class="display-area">
+              <svg class="progress-ring"><circle id="progressBar3" r="46" cx="50" cy="50" style="stroke: var(--accent-pink)"/></svg>
+              <div class="looper-icon" id="looperIcon3">▶</div>
+          </div>
+          <div class="state-display" id="stateDisplay3">Ready</div>
+          <div class="controls-area">
+              <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider3" min="0" max="120" value="90" /><span id="volValue3">90%</span></label>
+              <div class="track-fx-labels" id="trackFxLabels3"></div>
+              <select id="divider3"><option value="1">x1</option><option value="0.5">x½</option><option value="2">x2</option></select>
+          </div>
+          <div class="button-grid">
+              <button class="btn main-looper-btn" id="mainLooperBtn3">Record</button>
+              <button class="btn stop-btn" id="stopBtn3">Stop/Clear</button>
+              <button class="btn fx-menu-btn" id="fxMenuBtn3">🎛 FX Menu</button>
+          </div>
+        </div>
+
+        <!-- 5. Add Looper Button -->
+        <div id="addLooperBtn" class="pedal-unit">
+          +
+        </div>
+
+        <!-- Utility Pedals -->
+        <div id="overdubSettingsContainer" class="pedal-unit">
+          <div id="overdubSettings">
+              <h4>OVERDUB TUNING</h4>
+              <label>Nudge (ms): <span id="nudgeVal">-20</span>
+                  <input id="nudgeMs" type="range" min="-150" max="150" step="1" value="-20">
+              </label>
+              <label>Gain: <span id="overdubGainVal">1.00</span>
+                  <input id="overdubGain" type="range" min="0" max="2" step="0.01" value="1.0">
+              </label>
+          </div>
+        </div>
+        <div id="calibrationContainer" class="pedal-unit">
+          <h4>LATENCY CALIBRATION</h4>
+          <div style="text-align: center; padding: 10px; font-size: 0.9em; color: var(--text-secondary);">
+              <p>For accurate overdubbing, calibrate your device's audio latency.</p>
+              <p><strong>Instructions:</strong></p>
+              <ol style="text-align: left; margin: 10px auto; max-width: 200px;">
+                  <li>Disconnect headphones.</li>
+                  <li>Turn volume up.</li>
+                  <li>Press "Start Test".</li>
+                  <li>Remain quiet.</li>
+              </ol>
+          </div>
+          <button id="calibrateBtn" class="btn monitor-btn" style="margin-top: auto;">Start Test</button>
+          <p id="calibrationResult" style="margin-top: 15px; font-weight: bold;">Result: Not yet run</p>
+        </div>
       </div>
 
-      <!-- 2. Looper 1: Master -->
-      <div class="pedal-unit looper-pedal" id="looper1">
-        <div class="track-label">MASTER</div>
-        <div class="display-area">
-            <svg class="progress-ring"><circle id="progressBar1" r="46" cx="50" cy="50" /></svg>
-            <div class="looper-icon" id="looperIcon1">▶</div>
+      <div class="control-pedals-container">
+        <!-- FX Control & Live Mic -->
+        <div id="fxControlContainer" class="pedal-unit">
+          <h4>FX CONTROL</h4>
+          <div class="fx-control-grid">
+              <!-- Sliders will be injected by JS -->
+          </div>
+           <div id="mic-monitor-wrapper">
+                <button id="monitorBtn" class="btn monitor-btn">Live MIC OFF</button>
+           </div>
         </div>
-        <div class="state-display" id="stateDisplay1">Ready</div>
-        <div class="controls-area">
-            <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider1" min="0" max="120" value="90" /><span id="volValue1">90%</span></label>
-            <div class="track-fx-labels" id="trackFxLabels1"></div>
-        </div>
-        <div class="button-grid">
-            <button class="btn main-looper-btn" id="mainLooperBtn1">Record</button>
-            <button class="btn stop-btn" id="stopBtn1">Stop/Clear</button>
-            <button class="btn fx-menu-btn" id="fxMenuBtn1">🎛 FX Menu</button>
+
+        <!-- Auto FX Control -->
+        <div id="fxControlContainer2" class="pedal-unit">
+          <h4>AUTO-FX CONTROL</h4>
+          <div class="fx-control-grid" id="fx-control-grid-2">
+              <!-- Automated sliders will be injected by JS -->
+          </div>
         </div>
       </div>
-
-      <!-- 3. Looper 2 -->
-      <div class="pedal-unit looper-pedal" id="looper2">
-        <div class="track-label">TRACK 2</div>
-        <div class="display-area">
-            <svg class="progress-ring"><circle id="progressBar2" r="46" cx="50" cy="50" style="stroke: var(--accent-blue)"/></svg>
-            <div class="looper-icon" id="looperIcon2">▶</div>
-        </div>
-        <div class="state-display" id="stateDisplay2">Ready</div>
-        <div class="controls-area">
-            <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider2" min="0" max="120" value="90" /><span id="volValue2">90%</span></label>
-            <div class="track-fx-labels" id="trackFxLabels2"></div>
-            <select id="divider2"><option value="1">x1</option><option value="0.5">x½</option><option value="2">x2</option></select>
-        </div>
-        <div class="button-grid">
-            <button class="btn main-looper-btn" id="mainLooperBtn2">Record</button>
-            <button class="btn stop-btn" id="stopBtn2">Stop/Clear</button>
-            <button class="btn fx-menu-btn" id="fxMenuBtn2">🎛 FX Menu</button>
-        </div>
-      </div>
-
-      <!-- 4. Looper 3 -->
-      <div class="pedal-unit looper-pedal" id="looper3">
-        <div class="track-label">TRACK 3</div>
-        <div class="display-area">
-            <svg class="progress-ring"><circle id="progressBar3" r="46" cx="50" cy="50" style="stroke: var(--accent-pink)"/></svg>
-            <div class="looper-icon" id="looperIcon3">▶</div>
-        </div>
-        <div class="state-display" id="stateDisplay3">Ready</div>
-        <div class="controls-area">
-            <label class="looper-vol-label"><span>Vol</span><input type="range" class="looper-vol-slider" id="volSlider3" min="0" max="120" value="90" /><span id="volValue3">90%</span></label>
-            <div class="track-fx-labels" id="trackFxLabels3"></div>
-            <select id="divider3"><option value="1">x1</option><option value="0.5">x½</option><option value="2">x2</option></select>
-        </div>
-        <div class="button-grid">
-            <button class="btn main-looper-btn" id="mainLooperBtn3">Record</button>
-            <button class="btn stop-btn" id="stopBtn3">Stop/Clear</button>
-            <button class="btn fx-menu-btn" id="fxMenuBtn3">🎛 FX Menu</button>
-        </div>
-      </div>
-
-      <!-- 5. Add Looper Button -->
-      <div id="addLooperBtn" class="pedal-unit">
-        +
-      </div>
-
-      <!-- 6. FX Control & Live Mic -->
-      <div id="fxControlContainer" class="pedal-unit">
-        <h4>FX CONTROL</h4>
-        <div class="fx-control-grid">
-            <!-- Sliders will be injected by JS -->
-        </div>
-        <button id="monitorBtn" class="btn monitor-btn" style="margin-top: auto;">Live MIC OFF</button>
-      </div>
-
-      <!-- NEW: Auto FX Control -->
-      <div id="fxControlContainer2" class="pedal-unit">
-        <h4>AUTO-FX CONTROL</h4>
-        <div class="fx-control-grid" id="fx-control-grid-2">
-            <!-- Automated sliders will be injected by JS -->
-        </div>
-      </div>
-
-      <!-- 7. Overdub Settings -->
-      <div id="overdubSettingsContainer" class="pedal-unit">
-        <div id="overdubSettings">
-            <h4>OVERDUB TUNING</h4>
-            <label>Nudge (ms): <span id="nudgeVal">-20</span>
-                <input id="nudgeMs" type="range" min="-150" max="150" step="1" value="-125">
-            </label>
-            <label>Preroll (ms): <span id="prerollVal">150</span>
-                <input id="prerollMs" type="range" min="50" max="600" step="10" value="150">
-            </label>
-            <label>Gain: <span id="overdubGainVal">1.00</span>
-                <input id="overdubGain" type="range" min="0" max="2" step="0.01" value="1.0">
-            </label>
-        </div>
-      </div>
-
-      <!-- NEW: Latency Calibration Pedal -->
-      <div id="calibrationContainer" class="pedal-unit">
-        <h4>LATENCY CALIBRATION</h4>
-        <div style="text-align: center; padding: 10px; font-size: 0.9em; color: var(--text-secondary);">
-            <p>For accurate overdubbing, calibrate your device's audio latency.</p>
-            <p><strong>Instructions:</strong></p>
-            <ol style="text-align: left; margin: 10px auto; max-width: 200px;">
-                <li>Disconnect headphones.</li>
-                <li>Turn volume up.</li>
-                <li>Press "Start Test".</li>
-                <li>Remain quiet.</li>
-            </ol>
-        </div>
-        <button id="calibrateBtn" class="btn monitor-btn" style="margin-top: auto;">Start Test</button>
-        <p id="calibrationResult" style="margin-top: 15px; font-weight: bold;">Result: Not yet run</p>
-      </div>
-
     </div>
   </div>
 
@@ -722,19 +713,24 @@
     }
     async init() {
       if (this._inited) return;
-      const blob = new Blob([workletCode], { type: 'application/javascript' });
-      this._workletUrl = URL.createObjectURL(blob);
-      await this.audioCtx.audioWorklet.addModule(this._workletUrl);
-      this._node = new AudioWorkletNode(this.audioCtx, 'looper-recorder-processor', { processorOptions: { channels: this.channels } });
-      this._node.port.onmessage = (ev) => {
-        if (ev.data?.cmd === 'flush-data') {
-          const channels = (ev.data.channels || []).map(buf => new Float32Array(buf));
-          const marks = ev.data.markPositions || [];
-          if (this.ondata) { try { this.ondata(channels, marks); } catch (err) { console.error('ondata error', err); } }
-        }
-      };
-      this.source.connect(this._node);
-      this._inited = true;
+      try {
+        const blob = new Blob([workletCode], { type: 'application/javascript' });
+        this._workletUrl = URL.createObjectURL(blob);
+        await this.audioCtx.audioWorklet.addModule(this._workletUrl);
+        this._node = new AudioWorkletNode(this.audioCtx, 'looper-recorder-processor', { processorOptions: { channels: this.channels } });
+        this._node.port.onmessage = (ev) => {
+          if (ev.data?.cmd === 'flush-data') {
+            const channels = (ev.data.channels || []).map(buf => new Float32Array(buf));
+            const marks = ev.data.markPositions || [];
+            if (this.ondata) { try { this.ondata(channels, marks); } catch (err) { console.error('ondata error', err); } }
+          }
+        };
+        this.source.connect(this._node);
+        this._inited = true;
+      } catch (e) {
+        console.error("Failed to initialize LooperRecorder AudioWorklet.", e);
+        // Fallback or error message could be handled here
+      }
     }
     start() { if (!this._inited) throw new Error('init first'); this._node.port.postMessage({ cmd: 'clear' }); }
     markStart() { if (!this._inited) throw new Error('init first'); this._node.port.postMessage({ cmd: 'markStart' }); }
@@ -759,7 +755,7 @@
 // Part 2: Looper Engine Class
 class LooperEngine {
     constructor() {
-        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive', sampleRate: 44100 });
         this.loopers = [];
         this.looperCount = 3;
 
@@ -863,7 +859,7 @@ class LooperEngine {
 
     abortRecording(looper) {
         if (looper.state !== 'recording' || this.activeRecorderLooper !== looper) {
-            return; 
+            return;
         }
         
         if(looper.index === 1) {
@@ -1027,7 +1023,6 @@ class LooperEngine {
             const sr = this.audioCtx.sampleRate;
 
             if (looper.index > 1 && this.masterIsSet) {
-                // For secondary loops, apply latency correction and align to master loop length
                 const masterLenSamples = Math.round(this.masterLoopDuration * looper.divider * sr);
                 const newBuffer = this.audioCtx.createBuffer(channels.length, masterLenSamples, sr);
                 
@@ -1035,7 +1030,7 @@ class LooperEngine {
 
                 for (let ch = 0; ch < newBuffer.numberOfChannels; ch++) {
                     const outputData = newBuffer.getChannelData(ch);
-                    const inputData = channels[ch] || channels[0]; // fallback to mono
+                    const inputData = channels[ch] || channels[0];
                     
                     for (let i = 0; i < inputData.length; i++) {
                         let writeIdx = (nudgeSamples + i) % masterLenSamples;
@@ -1051,7 +1046,6 @@ class LooperEngine {
                 looper.loopDuration = newBuffer.duration;
 
             } else {
-                // Original logic for the master looper (index 1)
                 const bufferLength = channels[0].length;
                 const newBuffer = this.audioCtx.createBuffer(channels.length, bufferLength, sr);
                 for (let i = 0; i < channels.length; i++) {
@@ -1089,16 +1083,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const engine = new LooperEngine();
     let audioCtx = engine.audioCtx;
 
+    // --- Pre-Loop FX Nodes ---
+    let compressorNode, compressorWet;
+    let distortionNode, distortionWet;
     let convolver, reverbPreDelay, reverbWet;
     let delayNode, delayFeedback, delayWet;
     let flangerDelay, flangerWet, flangerFeedback, flangerLFO, flangerDepthGain;
+    let phaserNodes = [], phaserWet;
     let eq = null;
 
+    // --- Pre-Loop FX Parameters ---
+    let compressorMix = 0.5, compressorThreshold = -24, compressorKnee = 30, compressorRatio = 12, compressorAttack = 0.003, compressorRelease = 0.25;
+    let distortionMix = 0.3, distortionAmount = 100;
     let reverbMix = 0.25, reverbRoomSeconds = 2.5, reverbDecay = 2.0, reverbPreDelayMs = 20;
     let delayMix = 0.25, delayFeedbackAmt = 0.35, delaySyncMode = 'note', delayDivision = '1/8', delayVariant = 'straight', delayMs = 250;
     let flangerMix = 0.22, flangerRateHz = 0.25, flangerDepthMs = 2.0, flangerFeedbackAmt = 0.0;
+    let phaserMix = 0.4, phaserRateHz = 0.5, phaserDepth = 0.6, phaserStages = 4, phaserBaseFreq = 350;
     let eqLowGain = 3, eqMidGain = 2, eqMidFreq = 1200, eqMidQ = 0.9, eqHighGain = 3;
-    const beforeState = { delay:false, reverb:false, flanger:false, eq5:false, pitch: false };
+    const beforeState = { compressor: false, distortion: false, delay:false, reverb:false, flanger:false, phaser: false, eq5:false };
 
     let fxAssignments = [null, null, null, null];
     let fxAutomationAssignments = [null, null, null, null];
@@ -1126,26 +1128,62 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupPreLoopFxGraph() {
         if (!engine.micSource) return;
 
-        reverbPreDelay = audioCtx.createDelay(1.0); reverbPreDelay.delayTime.value = reverbPreDelayMs/1000;
-        convolver = audioCtx.createConvolver(); convolver.normalize = true; convolver.buffer = makeReverbImpulse(reverbRoomSeconds, reverbDecay);
+        // --- Compressor ---
+        compressorNode = audioCtx.createDynamicsCompressor();
+        compressorWet = audioCtx.createGain(); compressorWet.gain.value = 0;
+        engine.micSource.connect(compressorNode); compressorNode.connect(compressorWet); compressorWet.connect(engine.fxSumGain);
+
+        // --- Distortion ---
+        distortionNode = audioCtx.createWaveShaper(); distortionNode.oversample = '4x';
+        distortionWet = audioCtx.createGain(); distortionWet.gain.value = 0;
+        engine.micSource.connect(distortionNode); distortionNode.connect(distortionWet); distortionWet.connect(engine.fxSumGain);
+
+        // --- Reverb ---
+        reverbPreDelay = audioCtx.createDelay(1.0);
+        convolver = audioCtx.createConvolver(); convolver.normalize = true;
         reverbWet = audioCtx.createGain(); reverbWet.gain.value = 0;
         engine.micSource.connect(reverbPreDelay); reverbPreDelay.connect(convolver); convolver.connect(reverbWet); reverbWet.connect(engine.fxSumGain);
 
+        // --- Delay ---
         delayNode = audioCtx.createDelay(2.0);
-        delayFeedback = audioCtx.createGain(); delayFeedback.gain.value = delayFeedbackAmt;
+        delayFeedback = audioCtx.createGain();
         delayWet = audioCtx.createGain(); delayWet.gain.value = 0;
         delayNode.connect(delayFeedback); delayFeedback.connect(delayNode);
         engine.micSource.connect(delayNode); delayNode.connect(delayWet); delayWet.connect(engine.fxSumGain);
 
+        // --- Flanger ---
         flangerDelay = audioCtx.createDelay(0.05);
         flangerWet = audioCtx.createGain(); flangerWet.gain.value = 0;
-        flangerFeedback = audioCtx.createGain(); flangerFeedback.gain.value = flangerFeedbackAmt;
-        flangerLFO = audioCtx.createOscillator(); flangerLFO.type='sine'; flangerLFO.frequency.value = flangerRateHz;
-        flangerDepthGain = audioCtx.createGain(); flangerDepthGain.gain.value = flangerDepthMs/1000;
+        flangerFeedback = audioCtx.createGain();
+        flangerLFO = audioCtx.createOscillator(); flangerLFO.type='sine';
+        flangerDepthGain = audioCtx.createGain();
         flangerLFO.connect(flangerDepthGain); flangerDepthGain.connect(flangerDelay.delayTime);
         flangerDelay.connect(flangerWet); flangerWet.connect(engine.fxSumGain);
         flangerDelay.connect(flangerFeedback); flangerFeedback.connect(flangerDelay);
         engine.micSource.connect(flangerDelay); flangerLFO.start();
+        
+        // --- Phaser ---
+        phaserWet = audioCtx.createGain(); phaserWet.gain.value = 0;
+        buildPhaser(); // Initial build
+        engine.micSource.connect(phaserNodes[0]);
+        phaserNodes[phaserNodes.length-1].connect(phaserWet);
+        phaserWet.connect(engine.fxSumGain);
+
+
+        // --- Initial parameter setting after nodes are created ---
+        updateAllBeforeFxParams();
+    }
+    
+    function makeDistortionCurve(amount) {
+        const k = typeof amount === 'number' ? amount : 50;
+        const n_samples = 44100;
+        const curve = new Float32Array(n_samples);
+        const deg = Math.PI / 180;
+        for (let i = 0; i < n_samples; ++i) {
+            const x = i * 2 / n_samples - 1;
+            curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+        }
+        return curve;
     }
 
     function makeReverbImpulse(seconds, decay){
@@ -1160,6 +1198,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return buf;
     }
+
+    function buildPhaser() {
+        if(phaserNodes.length > 0) {
+            phaserNodes.forEach(node => node.disconnect());
+        }
+        phaserNodes = [];
+        let prevNode = null;
+        for (let i = 0; i < phaserStages; i++) {
+            const allpass = audioCtx.createBiquadFilter();
+            allpass.type = 'allpass';
+            allpass.frequency.value = phaserBaseFreq * Math.pow(2, i);
+            phaserNodes.push(allpass);
+            if(prevNode) {
+                prevNode.connect(allpass);
+            }
+            prevNode = allpass;
+        }
+        const lfo = audioCtx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = phaserRateHz;
+
+        const depth = audioCtx.createGain();
+        depth.gain.value = phaserBaseFreq * phaserDepth;
+
+        lfo.connect(depth);
+        phaserNodes.forEach(node => depth.connect(node.frequency));
+        lfo.start();
+    }
+
 
     const NOTE_MULT = { '1/1':4, '1/2':2, '1/4':1, '1/8':0.5, '1/16':0.25, '1/32':0.125 };
     function quarterSecForBPM(bpm){ return 60/(bpm||120); }
@@ -1182,9 +1249,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try{ engine.micSource.disconnect(engine.dryGain); }catch{}
             engine.micSource.connect(eq.low); eq.low.connect(eq.mid); eq.mid.connect(eq.high);
             eq.high.connect(engine.dryGain);
-            if(delayNode) eq.high.connect(delayNode);
-            if(reverbPreDelay) eq.high.connect(reverbPreDelay);
-            if(flangerDelay) eq.high.connect(flangerDelay);
 
         } else if (!enable && eq){
             try{ eq.high.disconnect(); }catch{}
@@ -1193,17 +1257,16 @@ document.addEventListener('DOMContentLoaded', () => {
             eq=null;
         }
     }
-
+    
     // --- New FX Trigger Functions ---
     function triggerVinylFlick(looper, fx) {
         if (!looper.sourceNode) return;
+        const currentPlaybackRate = looper.sourceNode.playbackRate.value;
         const param = looper.sourceNode.playbackRate;
         const now = audioCtx.currentTime;
         param.cancelScheduledValues(now);
-        // Exponential ramp down feels more natural for a turntable stop
         param.setTargetAtTime(0.01, now, fx.params.duration / 4);
-        // Schedule return to normal after the flick duration
-        param.setTargetAtTime(1.0, now + fx.params.duration, 0.1);
+        param.setTargetAtTime(currentPlaybackRate, now + fx.params.duration, 0.1);
     }
 
     function triggerBeatRepeat(looper, fx) {
@@ -1221,17 +1284,16 @@ document.addEventListener('DOMContentLoaded', () => {
         wet.gain.cancelScheduledValues(now);
         feedback.gain.cancelScheduledValues(now);
 
-        // Crossfade to wet signal
         dry.gain.linearRampToValueAtTime(0.0, now + 0.01);
-        wet.gain.linearRampToValueAtTime(fx.params.mix, now + 0.01);
+        wet.gain.linearRampToValueAtTime(1.0, now + 0.01);
         feedback.gain.setValueAtTime(0.85, now);
         
         const endTime = now + totalDuration;
         feedback.gain.setValueAtTime(0.0, endTime);
-        // Crossfade back to dry
         wet.gain.linearRampToValueAtTime(0.0, endTime + 0.05);
         dry.gain.linearRampToValueAtTime(1.0, endTime + 0.05);
     }
+
 
     class Looper {
         constructor(index, engineRef){
@@ -1247,7 +1309,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.loopStartTime = 0; this.loopDuration = 0;
             this.animationFrameId = null;
             this.divider = 1; this.uiDisabled = false;
-            this.prerecordMs = 150;
             this.manualNudgeMs = -20;
             this.overdubGain = 1.0;
             this.overdubStartAudioTime = null;
@@ -1364,8 +1425,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const allNodes = Object.values(nodes).filter(n => n instanceof AudioNode);
                 allNodes.forEach(n => { try { n.disconnect() } catch {} });
             };
+            const common_dispose_lfo = (nodes) => {
+                if (nodes.lfo) { try { nodes.lfo.stop() } catch {} }
+                common_dispose(nodes);
+            };
 
-            if (effect.type==='LowPass' || effect.type==='HighPass'){
+            if (effect.type==='LowPass' || effect.type==='HighPass' || effect.type==='BandPass'){
                 const input = audioCtx.createGain(), biq = audioCtx.createBiquadFilter(), output = audioCtx.createGain();
                 biq.type = effect.type.toLowerCase(); 
                 input.connect(biq); biq.connect(output);
@@ -1405,6 +1470,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 effect.nodes = { input, output, delay, feedback, wet, dry, updateDelayTime, dispose(){ common_dispose(this); } };
                 return;
             }
+             if (effect.type === 'Compressor') {
+                const input = audioCtx.createGain(), output = audioCtx.createGain();
+                const compressor = audioCtx.createDynamicsCompressor();
+                compressor.threshold.value = effect.params.threshold; compressor.knee.value = effect.params.knee;
+                compressor.ratio.value = effect.params.ratio; compressor.attack.value = effect.params.attack; compressor.release.value = effect.params.release;
+                input.connect(compressor); compressor.connect(output);
+                effect.nodes = { input, output, compressor, dispose(){ common_dispose(this); } };
+                return;
+            }
+            if (effect.type === 'Tremolo' || effect.type === 'Slicer') {
+                const input = audioCtx.createGain(), output = audioCtx.createGain(), tremoloGain = audioCtx.createGain();
+                const lfo = audioCtx.createOscillator(), lfoDepth = audioCtx.createGain();
+                lfo.type = (effect.type === 'Slicer') ? 'square' : 'sine';
+                lfo.frequency.value = effect.params.rate;
+                lfo.connect(lfoDepth); lfoDepth.connect(tremoloGain.gain);
+                input.connect(tremoloGain); tremoloGain.connect(output);
+                const depth = effect.params.depth; tremoloGain.gain.value = 1.0 - depth; lfoDepth.gain.value = depth;
+                lfo.start();
+                effect.nodes = { input, output, lfo, lfoDepth, tremoloGain, dispose(){ common_dispose_lfo(this); } };
+                return;
+            }
             if (effect.type === 'BeatRepeat') {
                 const input = audioCtx.createGain(), output = audioCtx.createGain();
                 const delay = audioCtx.createDelay(2.0), feedback = audioCtx.createGain();
@@ -1416,35 +1502,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 effect.nodes = { input, output, delay, feedback, wet, dry, dispose(){ common_dispose(this); } };
                 return;
             }
-            if (effect.type === 'BeatShift' || effect.type === 'BeatScatter') {
-                const input = audioCtx.createGain(), output = audioCtx.createGain();
-                const delay = audioCtx.createDelay(0.1), wet = audioCtx.createGain(), dry = audioCtx.createGain();
-                const lfo = audioCtx.createOscillator(), depth = audioCtx.createGain();
-                input.connect(dry); dry.connect(output);
-                input.connect(delay); delay.connect(wet); wet.connect(output);
-                lfo.connect(depth); depth.connect(delay.delayTime);
-                dry.gain.value = 1.0 - effect.params.mix; wet.gain.value = effect.params.mix;
-                lfo.frequency.value = effect.params.rate; depth.gain.value = effect.params.depth;
-                lfo.type = (effect.type === 'BeatShift') ? 'sawtooth' : 'square';
-                delay.delayTime.value = 0.01;
-                lfo.start();
-                effect.nodes = { input, output, lfo, depth, dry, wet, dispose(){ lfo.stop(); common_dispose(this); } };
-                return;
-            }
         }
 
         _rebuildChainWiring(){
             if (!this.sourceNode) return;
             try{ this.sourceNode.disconnect(); }catch{}
             
-            const pitchFx = this.fx.chain.find(e=>e.type==='Pitch');
+            const pitchFx = this.fx.chain.find(e=>e.type==='Pitch' && !e.bypass);
             this.sourceNode.playbackRate.value = Math.pow(2, (pitchFx?.params.semitones || 0)/12);
             
             let head = this.sourceNode;
             for (const fx of this.fx.chain){
                 if (fx.bypass) continue;
                 this._buildEffectNodes(fx);
-                if (!fx.nodes) continue;
+                if (!fx.nodes || !fx.nodes.input || !fx.nodes.output) continue;
                 try{ head.connect(fx.nodes.input); head = fx.nodes.output; }catch(e){console.warn('fx connect err',e)}
             }
             try{ head.connect(this.gainNode); }catch{}
@@ -1502,9 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const now = this.engine.audioCtx.currentTime;
             const elapsed = (now - this.loopStartTime) % this.loopDuration;
-
             const outputLatency = (typeof this.engine.audioCtx.outputLatency === 'number') ? this.engine.audioCtx.outputLatency : (this.engine.audioCtx.baseLatency || 0.040);
-
             let timeToNextLoop = (this.loopDuration - elapsed) - outputLatency;
             if (timeToNextLoop < 0) timeToNextLoop += this.loopDuration;
 
@@ -1590,7 +1659,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const slider = $(`#autoControlSlider${index}`);
             const currentValue = getInterpolatedValue(assignment.points, progress);
             slider.value = currentValue;
-            $(`#autoControlValue${index}`).textContent = currentValue.toFixed(assignment.param.match(/q|pan/) ? 2 : 0);
+            $(`#autoControlValue${index}`).textContent = currentValue.toFixed(assignment.param.match(/q|pan|depth|duration|feedback/) ? 2 : 0);
             const { looperIndex, fxId, param } = assignment;
             const looper = engine.loopers[looperIndex];
             const fx = looper ? looper.fx.chain.find(f => f.id === fxId) : null;
@@ -1606,7 +1675,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await engine.ensureMic();
             setupPreLoopFxGraph();
             
-            // Once mic is ready, hide overlay and show main app
             document.getElementById('start-overlay').style.display = 'none';
             document.querySelector('.main-wrapper').style.visibility = 'visible';
 
@@ -1615,7 +1683,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 1; i <= 3; i++) engine.loopers[i] = new Looper(i, engine);
 
             engine.onBpmUpdate = () => {
-                updateDelayFromTempo(); // This is the pre-loop delay
+                updateDelayFromTempo();
                 engine.loopers.forEach(looper => {
                     if (!looper) return;
                     looper.fx.chain.forEach(fx => {
@@ -1632,17 +1700,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 engine.looperCount++;
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = createLooperHTML(engine.looperCount).trim();
-                $('.landscape-container').insertBefore(tempDiv.firstChild, $('#addLooperBtn'));
+                $('.main-pedals-container').insertBefore(tempDiv.firstChild, $('#addLooperBtn'));
                 engine.loopers[engine.looperCount] = new Looper(engine.looperCount, engine);
                 if (!engine.masterIsSet) engine.loopers[engine.looperCount].disable(true);
                 if (engine.looperCount >= 12) $('#addLooperBtn').classList.add('hidden');
             });
 
+            $('#fxBeforeBtn_compressor').addEventListener('click', () => { toggleBeforeFx('compressor'); openBeforeFxPopup('compressor');});
+            $('#fxBeforeBtn_distortion').addEventListener('click', () => { toggleBeforeFx('distortion'); openBeforeFxPopup('distortion');});
             $('#fxBeforeBtn_delay').addEventListener('click', () => { toggleBeforeFx('delay'); openBeforeFxPopup('delay');});
             $('#fxBeforeBtn_reverb').addEventListener('click', () => { toggleBeforeFx('reverb'); openBeforeFxPopup('reverb');});
             $('#fxBeforeBtn_flanger').addEventListener('click', () => { toggleBeforeFx('flanger'); openBeforeFxPopup('flanger');});
+            $('#fxBeforeBtn_phaser').addEventListener('click', () => { toggleBeforeFx('phaser'); openBeforeFxPopup('phaser');});
             $('#fxBeforeBtn_eq5').addEventListener('click', () => { toggleBeforeFx('eq5'); openBeforeFxPopup('eq5');});
-            $('#fxBeforeBtn_pitch').addEventListener('click', () => openBeforeFxPopup('pitch'));
 
             $('#monitorBtn').addEventListener('click', () => {
                 engine.liveMicMonitoring = !engine.liveMicMonitoring;
@@ -1652,7 +1722,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             $('#nudgeMs').addEventListener('input', e => { const v = parseInt(e.target.value); $('#nudgeVal').textContent=v; engine.loopers.forEach(l=>l&&(l.manualNudgeMs=v)); });
-            $('#prerollMs').addEventListener('input', e => { const v = parseInt(e.target.value); $('#prerollVal').textContent=v; engine.loopers.forEach(l=>l&&(l.prerecordMs=v)); });
             $('#overdubGain').addEventListener('input', e => { const v = parseFloat(e.target.value); $('#overdubGainVal').textContent=v.toFixed(2); engine.loopers.forEach(l=>l&&(l.overdubGain=v)); });
             
             $('#calibrateBtn').addEventListener('click', () => engine.runLatencyCalibration());
@@ -1668,7 +1737,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // This is the main entry point for the app
     function onDeviceReady() {
         if (window.cordova && window.cordova.platformId === 'android') {
             const permissions = cordova.plugins.permissions;
@@ -1687,9 +1755,7 @@ document.addEventListener('DOMContentLoaded', () => {
                              p.style.color = 'var(--accent-pink)';
                              document.getElementById('startBtn').style.display = 'none';
                         }
-                    }, () => {
-                        console.error("Error requesting permission.");
-                    });
+                    }, () => { console.error("Error requesting permission."); });
                 }
             });
         } else {
@@ -1698,13 +1764,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     $('#startBtn').addEventListener('click', () => {
-        if (window.cordova) {
-            onDeviceReady();
-        } else {
-             initializeApp();
-        }
+        if (window.cordova) { onDeviceReady(); } 
+        else { initializeApp(); }
     });
-
     document.addEventListener('deviceready', () => {}, false);
 
 
@@ -1712,10 +1774,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!engine.micSource) { engine.showMsg("Start audio first!"); return; }
         beforeState[fxName] = !beforeState[fxName];
         $(`#fxBeforeBtn_${fxName}`).classList.toggle('active', beforeState[fxName]);
+        if(fxName === 'compressor') compressorWet.gain.value = beforeState.compressor ? compressorMix : 0;
+        if(fxName === 'distortion') distortionWet.gain.value = beforeState.distortion ? distortionMix : 0;
         if(fxName === 'delay') delayWet.gain.value = beforeState.delay ? delayMix : 0;
         if(fxName === 'reverb') reverbWet.gain.value = beforeState.reverb ? reverbMix : 0;
         if(fxName === 'flanger') flangerWet.gain.value = beforeState.flanger ? flangerMix : 0;
+        if(fxName === 'phaser') phaserWet.gain.value = beforeState.phaser ? phaserMix : 0;
         if(fxName === 'eq5') toggleEQ(beforeState.eq5);
+    }
+    
+    function updateAllBeforeFxParams(){
+        if(!compressorNode) return;
+        compressorNode.threshold.value = compressorThreshold; compressorNode.knee.value = compressorKnee; compressorNode.ratio.value = compressorRatio; compressorNode.attack.value = compressorAttack; compressorNode.release.value = compressorRelease;
+        distortionNode.curve = makeDistortionCurve(distortionAmount);
+        convolver.buffer = makeReverbImpulse(reverbRoomSeconds, reverbDecay);
+        reverbPreDelay.delayTime.value = reverbPreDelayMs/1000;
+        updateDelayFromTempo();
+        delayFeedback.gain.value = delayFeedbackAmt;
+        flangerLFO.frequency.value = flangerRateHz; flangerDepthGain.gain.value = flangerDepthMs/1000; flangerFeedback.gain.value = flangerFeedbackAmt;
     }
 
     function openBeforeFxPopup(tab='reverb'){
@@ -1726,29 +1802,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderBeforeFxTab(tab){
+        if (tab==='compressor') return `<label>Threshold <span id="compThreshVal">${compressorThreshold.toFixed(0)} dB</span><input id="compThresh" type="range" min="-100" max="0" step="1" value="${compressorThreshold}"></label><label>Ratio <span id="compRatioVal">${compressorRatio.toFixed(0)}:1</span><input id="compRatio" type="range" min="1" max="20" step="1" value="${compressorRatio}"></label><label>Knee <span id="compKneeVal">${compressorKnee.toFixed(0)}</span><input id="compKnee" type="range" min="0" max="40" step="1" value="${compressorKnee}"></label><label>Attack <span id="compAttackVal">${(compressorAttack*1000).toFixed(1)} ms</span><input id="compAttack" type="range" min="0" max="1" step="0.001" value="${compressorAttack}"></label><label>Release <span id="compReleaseVal">${(compressorRelease*1000).toFixed(0)} ms</span><input id="compRelease" type="range" min="0" max="1" step="0.01" value="${compressorRelease}"></label><label>Mix <span id="compMixVal">${Math.round(compressorMix*100)}%</span><input id="compMix" type="range" min="0" max="100" value="${Math.round(compressorMix*100)}"></label>`;
+        if (tab==='distortion') return `<label>Drive <span id="distAmtVal">${distortionAmount}</span><input id="distAmt" type="range" min="0" max="1000" value="${distortionAmount}"></label><label>Mix <span id="distMixVal">${Math.round(distortionMix*100)}%</span><input id="distMix" type="range" min="0" max="100" value="${Math.round(distortionMix*100)}"></label>`;
         if (tab==='reverb') return `<label>Mix <span id="rvMixVal">${Math.round(reverbMix*100)}%</span><input id="rvMix" type="range" min="0" max="100" value="${Math.round(reverbMix*100)}"></label><label>Room Size <span id="rvRoomVal">${reverbRoomSeconds.toFixed(2)} s</span><input id="rvRoom" type="range" min="0.3" max="6.0" step="0.05" value="${reverbRoomSeconds}"></label><label>Decay <span id="rvDecayVal">${reverbDecay.toFixed(2)}</span><input id="rvDecay" type="range" min="0.5" max="4.0" step="0.05" value="${reverbDecay}"></label><label>Pre-delay <span id="rvPreVal">${reverbPreDelayMs} ms</span><input id="rvPre" type="range" min="0" max="200" step="1" value="${reverbPreDelayMs}"></label>`;
         if (tab==='delay') return `<label>Mode <select id="dlMode"><option value="note" ${delaySyncMode==='note'?'selected':''}>Tempo-sync</option><option value="ms" ${delaySyncMode==='ms'?'selected':''}>Milliseconds</option></select></label><div id="dlNoteRow"><label>Division <select id="dlDiv">${['1/1','1/2','1/4','1/8','1/16','1/32'].map(x=>`<option ${x===delayDivision?'selected':''}>${x}</option>`).join('')}</select></label><label>Variant <select id="dlVar"><option value="straight" ${delayVariant==='straight'?'selected':''}>Straight</option><option value="dotted" ${delayVariant==='dotted'?'selected':''}>Dotted</option><option value="triplet" ${delayVariant==='triplet'?'selected':''}>Triplet</option></select></label></div><div id="dlMsRow" style="display:none;"><label>Delay Time <span id="dlMsVal">${delayMs} ms</span><input id="dlMs" type="range" min="1" max="2000" value="${delayMs}"></label></div><label>Feedback <span id="dlFbVal">${Math.round(delayFeedbackAmt*100)}%</span><input id="dlFb" type="range" min="0" max="95" value="${Math.round(delayFeedbackAmt*100)}"></label><label>Mix <span id="dlMixVal">${Math.round(delayMix*100)}%</span><input id="dlMix" type="range" min="0" max="100" value="${Math.round(delayMix*100)}"></label>`;
         if (tab==='flanger') return `<label>Rate <span id="flRateVal">${flangerRateHz.toFixed(2)} Hz</span><input id="flRate" type="range" min="0.05" max="5" step="0.01" value="${flangerRateHz}"></label><label>Depth <span id="flDepthVal">${flangerDepthMs.toFixed(2)} ms</span><input id="flDepth" type="range" min="0" max="5" step="0.01" value="${flangerDepthMs}"></label><label>Feedback <span id="flFbVal">${Math.round(flangerFeedbackAmt*100)}%</span><input id="flFb" type="range" min="-95" max="95" value="${Math.round(flangerFeedbackAmt*100)}"></label><label>Mix <span id="flMixVal">${Math.round(flangerMix*100)}%</span><input id="flMix" type="range" min="0" max="100" value="${Math.round(flangerMix*100)}"></label>`;
+        if (tab==='phaser') return `<label>Rate <span id="phRateVal">${phaserRateHz.toFixed(2)} Hz</span><input id="phRate" type="range" min="0.05" max="5" step="0.01" value="${phaserRateHz}"></label><label>Depth <span id="phDepthVal">${phaserDepth.toFixed(2)}</span><input id="phDepth" type="range" min="0" max="1" step="0.01" value="${phaserDepth}"></label><label>Base Freq <span id="phBaseVal">${phaserBaseFreq} Hz</span><input id="phBase" type="range" min="20" max="2000" value="${phaserBaseFreq}"></label><label>Stages <span id="phStagesVal">${phaserStages}</span><input id="phStages" type="range" min="2" max="12" step="2" value="${phaserStages}"></label><label>Mix <span id="phMixVal">${Math.round(phaserMix*100)}%</span><input id="phMix" type="range" min="0" max="100" value="${Math.round(phaserMix*100)}"></label>`;
         if (tab==='eq5') return `<label>Low Shelf Gain <span id="eqLowVal">${eqLowGain} dB</span><input id="eqLow" type="range" min="-12" max="12" value="${eqLowGain}"></label><label>Mid Gain <span id="eqMidGainVal">${eqMidGain} dB</span><input id="eqMidGain" type="range" min="-12" max="12" value="${eqMidGain}"></label><label>Mid Freq <span id="eqMidFreqVal">${eqMidFreq} Hz</span><input id="eqMidFreq" type="range" min="300" max="5000" step="10" value="${eqMidFreq}"></label><label>Mid Q <span id="eqMidQVal">${eqMidQ.toFixed(2)}</span><input id="eqMidQ" type="range" min="0.3" max="4.0" step="0.01" value="${eqMidQ}"></label><label>High Shelf Gain <span id="eqHighVal">${eqHighGain} dB</span><input id="eqHigh" type="range" min="-12" max="12" value="${eqHighGain}"></label>`;
-        if (tab==='pitch') return `<p>Live input pitch shifting is not available. Use After-FX for pitch control on recorded loops.</p>`;
         return '';
     }
     function wireBeforeFxTab(tab){
+        if(tab==='compressor'){ $('#compThresh').addEventListener('input', e=>{ compressorThreshold=parseFloat(e.target.value); if(compressorNode) compressorNode.threshold.value = compressorThreshold; $('#compThreshVal').textContent = `${compressorThreshold.toFixed(0)} dB`; }); $('#compRatio').addEventListener('input', e=>{ compressorRatio=parseFloat(e.target.value); if(compressorNode) compressorNode.ratio.value = compressorRatio; $('#compRatioVal').textContent = `${compressorRatio.toFixed(0)}:1`; }); $('#compKnee').addEventListener('input', e=>{ compressorKnee=parseFloat(e.target.value); if(compressorNode) compressorNode.knee.value = compressorKnee; $('#compKneeVal').textContent = `${compressorKnee.toFixed(0)}`; }); $('#compAttack').addEventListener('input', e=>{ compressorAttack=parseFloat(e.target.value); if(compressorNode) compressorNode.attack.value = compressorAttack; $('#compAttackVal').textContent = `${(compressorAttack*1000).toFixed(1)} ms`; }); $('#compRelease').addEventListener('input', e=>{ compressorRelease=parseFloat(e.target.value); if(compressorNode) compressorNode.release.value = compressorRelease; $('#compReleaseVal').textContent = `${(compressorRelease*1000).toFixed(0)} ms`; }); $('#compMix').addEventListener('input', e=>{ compressorMix=parseFloat(e.target.value)/100; if(compressorWet) compressorWet.gain.value = beforeState.compressor ? compressorMix : 0; $('#compMixVal').textContent = `${Math.round(compressorMix*100)}%`; }); }
+        if(tab==='distortion'){ $('#distAmt').addEventListener('input', e=>{ distortionAmount=parseFloat(e.target.value); if(distortionNode) distortionNode.curve = makeDistortionCurve(distortionAmount); $('#distAmtVal').textContent = distortionAmount.toFixed(0); }); $('#distMix').addEventListener('input', e=>{ distortionMix=parseFloat(e.target.value)/100; if(distortionWet) distortionWet.gain.value = beforeState.distortion ? distortionMix : 0; $('#distMixVal').textContent = `${Math.round(distortionMix*100)}%`; }); }
         if(tab==='reverb'){ $('#rvMix').addEventListener('input', e=>{ reverbMix = parseFloat(e.target.value)/100; if(reverbWet) reverbWet.gain.value = beforeState.reverb ? reverbMix : 0; $('#rvMixVal').textContent = `${Math.round(reverbMix*100)}%`; }); const regen = debounce(()=>{ if(convolver) convolver.buffer = makeReverbImpulse(reverbRoomSeconds, reverbDecay); }, 180); $('#rvRoom').addEventListener('input', e=>{ reverbRoomSeconds = parseFloat(e.target.value); $('#rvRoomVal').textContent = `${reverbRoomSeconds.toFixed(2)} s`; regen(); }); $('#rvDecay').addEventListener('input', e=>{ reverbDecay = parseFloat(e.target.value); $('#rvDecayVal').textContent = reverbDecay.toFixed(2); regen(); }); $('#rvPre').addEventListener('input', e=>{ reverbPreDelayMs = parseInt(e.target.value,10); if (reverbPreDelay) reverbPreDelay.delayTime.value = reverbPreDelayMs/1000; $('#rvPreVal').textContent = `${reverbPreDelayMs} ms`; }); }
         if(tab==='delay'){ const syncUI = ()=>{ const noteRow=$('#dlNoteRow'), msRow=$('#dlMsRow'); if(delaySyncMode==='note'){ noteRow.style.display='block'; msRow.style.display='none'; updateDelayFromTempo(); } else { noteRow.style.display='none'; msRow.style.display='block'; if(delayNode) delayNode.delayTime.value = engine.clamp(delayMs/1000,0,2);} }; $('#dlMode').addEventListener('change', e=>{ delaySyncMode = e.target.value; syncUI(); }); $('#dlDiv').addEventListener('change', e=>{ delayDivision = e.target.value; updateDelayFromTempo(); }); $('#dlVar').addEventListener('change', e=>{ delayVariant = e.target.value; updateDelayFromTempo(); }); $('#dlMs').addEventListener('input', e=>{ delayMs = parseInt(e.target.value,10); if (delaySyncMode==='ms' && delayNode) delayNode.delayTime.value = engine.clamp(delayMs/1000,0,2); $('#dlMsVal').textContent = `${delayMs} ms`; }); $('#dlFb').addEventListener('input', e=>{ delayFeedbackAmt = parseFloat(e.target.value)/100; if(delayFeedback) delayFeedback.gain.value = engine.clamp(delayFeedbackAmt,0,0.95); $('#dlFbVal').textContent = `${Math.round(delayFeedbackAmt*100)}%`; }); $('#dlMix').addEventListener('input', e=>{ delayMix = parseFloat(e.target.value)/100; if(delayWet) delayWet.gain.value = beforeState.delay ? delayMix : 0; $('#dlMixVal').textContent = `${Math.round(delayMix*100)}%`; }); syncUI(); }
         if(tab==='flanger'){ $('#flRate').addEventListener('input', e=>{ flangerRateHz = parseFloat(e.target.value); if(flangerLFO) flangerLFO.frequency.value = flangerRateHz; $('#flRateVal').textContent = `${flangerRateHz.toFixed(2)} Hz`; }); $('#flDepth').addEventListener('input', e=>{ flangerDepthMs = parseFloat(e.target.value); if(flangerDepthGain) flangerDepthGain.gain.value = flangerDepthMs/1000; $('#flDepthVal').textContent = `${flangerDepthMs.toFixed(2)} ms`; }); $('#flFb').addEventListener('input', e=>{ flangerFeedbackAmt = parseFloat(e.target.value)/100; if(flangerFeedback) flangerFeedback.gain.value = engine.clamp(flangerFeedbackAmt, -0.95, 0.95); $('#flFbVal').textContent = `${Math.round(flangerFeedbackAmt*100)}%`; }); $('#flMix').addEventListener('input', e=>{ flangerMix = parseFloat(e.target.value)/100; if(flangerWet) flangerWet.gain.value = beforeState.flanger ? flangerMix : 0; $('#flMixVal').textContent = `${Math.round(flangerMix*100)}%`; }); }
+        if(tab==='phaser'){ const regenPhaser = debounce(() => { buildPhaser(); engine.micSource.connect(phaserNodes[0]); phaserNodes[phaserNodes.length-1].connect(phaserWet); }, 100); $('#phRate').addEventListener('input', e => { phaserRateHz = parseFloat(e.target.value); regenPhaser(); $('#phRateVal').textContent = `${phaserRateHz.toFixed(2)} Hz`; }); $('#phDepth').addEventListener('input', e => { phaserDepth = parseFloat(e.target.value); regenPhaser(); $('#phDepthVal').textContent = phaserDepth.toFixed(2); }); $('#phBase').addEventListener('input', e => { phaserBaseFreq = parseInt(e.target.value, 10); regenPhaser(); $('#phBaseVal').textContent = `${phaserBaseFreq} Hz`; }); $('#phStages').addEventListener('input', e => { phaserStages = parseInt(e.target.value, 10); regenPhaser(); $('#phStagesVal').textContent = phaserStages; }); $('#phMix').addEventListener('input', e => { phaserMix = parseFloat(e.target.value)/100; if(phaserWet) phaserWet.gain.value = beforeState.phaser ? phaserMix : 0; $('#phMixVal').textContent = `${Math.round(phaserMix*100)}%`; }); }
         if(tab==='eq5'){ $('#eqLow').addEventListener('input', e=>{ eqLowGain=parseInt(e.target.value,10); if(eq?.low) eq.low.gain.value=eqLowGain; $('#eqLowVal').textContent = `${eqLowGain} dB`; }); $('#eqMidGain').addEventListener('input', e=>{ eqMidGain=parseInt(e.target.value,10); if(eq?.mid) eq.mid.gain.value=eqMidGain; $('#eqMidGainVal').textContent = `${eqMidGain} dB`; }); $('#eqMidFreq').addEventListener('input', e=>{ eqMidFreq=parseInt(e.target.value,10); if(eq?.mid) eq.mid.frequency.value=eqMidFreq; $('#eqMidFreqVal').textContent = `${eqMidFreq} Hz`; }); $('#eqMidQ').addEventListener('input', e=>{ eqMidQ=parseFloat(e.target.value); if(eq?.mid) eq.mid.Q.value=eqMidQ; $('#eqMidQVal').textContent = eqMidQ.toFixed(2); }); $('#eqHigh').addEventListener('input', e=>{ eqHighGain=parseInt(e.target.value,10); if(eq?.high) eq.high.gain.value=eqHighGain; $('#eqHighVal').textContent = `${eqHighGain} dB`; }); }
     }
 
     const AFTER_FX_CATALOG = [
         { type:'Pitch', name:'Pitch', defaults:{ semitones:0 } },
-        { type:'LowPass', name:'LowPass', defaults:{ cutoff:800, q:1 } },
-        { type:'HighPass', name:'HighPass', defaults:{ cutoff:500, q:1 } },
+        { type:'LowPass', name:'Filter: LowPass', defaults:{ cutoff:800, q:1 } },
+        { type:'HighPass', name:'Filter: HighPass', defaults:{ cutoff:500, q:1 } },
+        { type:'BandPass', name:'Filter: BandPass', defaults:{ cutoff:1000, q:2 } },
         { type:'Pan', name:'Pan', defaults:{ pan:0 } },
+        { type:'Compressor', name:'Compressor', defaults:{ threshold: -24, knee: 30, ratio: 12, attack: 0.003, release: 0.25 } },
         { type:'Delay', name:'Delay', defaults:{ mix: 0.3, feedback: 0.4, division: '1/4', variant: 'straight' } },
+        { type:'Tremolo', name:'Tremolo', defaults:{ rate: 5, depth: 0.8 } },
+        { type:'Slicer', name:'Slicer (Gate)', defaults:{ rate: 8, depth: 1.0 } },
         { type:'BeatRepeat', name:'Beat Repeat', defaults:{ mix: 0.5, division: '1/8', repeats: 4 } },
-        { type:'BeatShift', name:'Beat Shift (Glitch)', defaults:{ mix: 0.6, rate: 4, depth: 0.02 } },
-        { type:'BeatScatter', name:'Beat Scatter (Glitch)', defaults:{ mix: 0.6, rate: 8, depth: 0.03 } },
         { type:'VinylFlick', name:'Vinyl Flick/Stop', defaults:{ duration: 0.3 } },
     ];
 
@@ -1795,7 +1878,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addAfterFx(looper, fxType){
         const template = AFTER_FX_CATALOG.find(e=>e.type===fxType);
-        if (!template || looper.fx.chain.length >= 5) return;
+        if (!template || looper.fx.chain.length >= 8) return;
         const newFx = { id:looper.fx.nextId++, type:fxType, name:template.name, params:{...template.defaults}, bypass:false, nodes:null };
         looper.fx.chain.push(newFx);
         looper._rebuildChainWiring();
@@ -1869,27 +1952,33 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let html = '';
         if (fx.type==='Pitch') html += paramToHtml('semitones', 'Semitones', -12, 12, 1);
-        if (fx.type==='LowPass' || fx.type==='HighPass') {
-            html += paramToHtml('cutoff', 'Cutoff', 50, 10000, 10);
+        if (fx.type==='LowPass' || fx.type==='HighPass' || fx.type==='BandPass') {
+            html += paramToHtml('cutoff', 'Cutoff', 50, 15000, 10);
             html += paramToHtml('q', 'Q', 0.1, 10, 0.1, v => v.toFixed(2));
         }
         if (fx.type==='Pan') html += paramToHtml('pan', 'Pan', -1, 1, 0.05, v => v.toFixed(2));
+        if (fx.type === 'Compressor') {
+            html += paramToHtml('threshold', 'Threshold', -100, 0, 1, v => `${v.toFixed(0)} dB`);
+            html += paramToHtml('ratio', 'Ratio', 1, 20, 1, v => `${v.toFixed(0)}:1`);
+            html += paramToHtml('knee', 'Knee', 0, 40, 1, v => v.toFixed(0));
+            html += paramToHtml('attack', 'Attack', 0, 1, 0.001, v => `${(v * 1000).toFixed(1)} ms`);
+            html += paramToHtml('release', 'Release', 0, 1, 0.01, v => `${(v * 1000).toFixed(0)} ms`);
+        }
         if (fx.type === 'Delay') {
             html += paramToHtml('mix', 'Mix', 0, 1, 0.01, v => `${(v*100).toFixed(0)}%`);
             html += paramToHtml('feedback', 'Feedback', 0, 0.95, 0.01, v => `${(v*100).toFixed(0)}%`);
             html += selectToHtml('division', 'Division', ['1/1','1/2','1/4','1/8','1/16','1/32']);
             html += selectToHtml('variant', 'Variant', ['straight', 'dotted', 'triplet']);
         }
+        if (fx.type === 'Tremolo' || fx.type === 'Slicer') {
+             html += paramToHtml('rate', 'Rate', 0.1, 20, 0.1, v => `${v.toFixed(1)} Hz`);
+             html += paramToHtml('depth', 'Depth', 0.0, 1.0, 0.01, v => `${(v*100).toFixed(0)}%`);
+        }
         if (fx.type === 'BeatRepeat') {
             html += paramToHtml('mix', 'Mix', 0, 1, 0.01, v => `${(v*100).toFixed(0)}%`);
             html += paramToHtml('repeats', 'Repeats', 1, 16, 1);
             html += selectToHtml('division', 'Division', ['1/4','1/8','1/16','1/32']);
             html += `<button class="btn-trigger" id="triggerBeatRepeat">Trigger Repeat</button>`;
-        }
-        if (fx.type === 'BeatShift' || fx.type === 'BeatScatter') {
-            html += paramToHtml('mix', 'Mix', 0, 1, 0.01, v => `${(v*100).toFixed(0)}%`);
-            html += paramToHtml('rate', 'Rate', 0.1, 20, 0.1, v => `${v.toFixed(1)} Hz`);
-            html += paramToHtml('depth', 'Depth', 0.001, 0.05, 0.001, v => `${(v*1000).toFixed(1)} ms`);
         }
         if (fx.type === 'VinylFlick') {
             html += paramToHtml('duration', 'Duration', 0.1, 1.0, 0.01, v => `${v.toFixed(2)}s`);
@@ -1899,7 +1988,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function wireAfterFxParams(looper, fx){
-        const setupSlider = (param, updateFn, valueFormatFn = v => v.toFixed(param.match(/q|pan|depth|duration/) ? 2 : 0)) => {
+        const setupSlider = (param, updateFn, valueFormatFn = v => v.toFixed(param.match(/q|pan|depth|duration|feedback/) ? 2 : 0)) => {
             const slider = $(`#${param}`);
             const valueLabel = $(`#${param}Val`);
             if (!slider || !valueLabel) return;
@@ -1931,27 +2020,33 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (fx.type === 'Pitch') setupSlider('semitones', v => updateAudioNodeParam(looper, fx, 'semitones', v));
-        if (fx.type === 'LowPass' || fx.type === 'HighPass') {
+        if (fx.type === 'LowPass' || fx.type === 'HighPass' || fx.type === 'BandPass') {
             setupSlider('cutoff', v => updateAudioNodeParam(looper, fx, 'cutoff', v));
             setupSlider('q', v => updateAudioNodeParam(looper, fx, 'q', v));
         }
         if (fx.type === 'Pan') setupSlider('pan', v => updateAudioNodeParam(looper, fx, 'pan', v));
+        if (fx.type === 'Compressor') {
+            setupSlider('threshold', v => updateAudioNodeParam(looper, fx, 'threshold', v), v => `${v.toFixed(0)} dB`);
+            setupSlider('ratio', v => updateAudioNodeParam(looper, fx, 'ratio', v), v => `${v.toFixed(0)}:1`);
+            setupSlider('knee', v => updateAudioNodeParam(looper, fx, 'knee', v), v => v.toFixed(0));
+            setupSlider('attack', v => updateAudioNodeParam(looper, fx, 'attack', v), v => `${(v * 1000).toFixed(1)} ms`);
+            setupSlider('release', v => updateAudioNodeParam(looper, fx, 'release', v), v => `${(v * 1000).toFixed(0)} ms`);
+        }
         if (fx.type === 'Delay') {
             setupSlider('mix', v => updateAudioNodeParam(looper, fx, 'mix', v), v => `${(v*100).toFixed(0)}%`);
             setupSlider('feedback', v => updateAudioNodeParam(looper, fx, 'feedback', v), v => `${(v*100).toFixed(0)}%`);
             setupSelector('division', v => updateAudioNodeParam(looper, fx, 'division', v));
             setupSelector('variant', v => updateAudioNodeParam(looper, fx, 'variant', v));
         }
+        if (fx.type === 'Tremolo' || fx.type === 'Slicer') {
+             setupSlider('rate', v => updateAudioNodeParam(looper, fx, 'rate', v), v => `${v.toFixed(1)} Hz`);
+             setupSlider('depth', v => updateAudioNodeParam(looper, fx, 'depth', v), v => `${(v*100).toFixed(0)}%`);
+        }
         if (fx.type === 'BeatRepeat') {
             setupSlider('mix', v => fx.params.mix = v, v => `${(v*100).toFixed(0)}%`);
             setupSlider('repeats', v => fx.params.repeats = v);
             setupSelector('division', v => fx.params.division = v);
             $('#triggerBeatRepeat')?.addEventListener('click', () => triggerBeatRepeat(looper, fx));
-        }
-        if (fx.type === 'BeatShift' || fx.type === 'BeatScatter') {
-             setupSlider('mix', v => updateAudioNodeParam(looper, fx, 'mix', v), v => `${(v*100).toFixed(0)}%`);
-             setupSlider('rate', v => updateAudioNodeParam(looper, fx, 'rate', v), v => `${v.toFixed(1)} Hz`);
-             setupSlider('depth', v => updateAudioNodeParam(looper, fx, 'depth', v), v => `${(v*1000).toFixed(1)} ms`);
         }
         if (fx.type === 'VinylFlick') {
             setupSlider('duration', v => fx.params.duration = v, v => `${v.toFixed(2)}s`);
@@ -1973,19 +2068,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateAudioNodeParam(looper, fx, param, value) {
         if (!fx.nodes) looper._buildEffectNodes(fx);
+        if (!fx.nodes) return;
         if (fx.type === 'Pitch' && param === 'semitones') { if (looper.sourceNode) looper.sourceNode.playbackRate.value = Math.pow(2, value / 12); }
-        else if (param === 'cutoff') { if (fx.nodes?.biq) fx.nodes.biq.frequency.value = value; }
-        else if (param === 'q') { if (fx.nodes?.biq) fx.nodes.biq.Q.value = value; }
-        else if (fx.type === 'Pan' && param === 'pan') { if (fx.nodes?.panner) fx.nodes.panner.pan.value = value; }
+        else if (param === 'cutoff') { if (fx.nodes.biq) fx.nodes.biq.frequency.value = value; }
+        else if (param === 'q') { if (fx.nodes.biq) fx.nodes.biq.Q.value = value; }
+        else if (fx.type === 'Pan' && param === 'pan') { if (fx.nodes.panner) fx.nodes.panner.pan.value = value; }
+        else if (fx.type === 'Compressor' && fx.nodes.compressor) { if (fx.nodes.compressor[param]) { fx.nodes.compressor[param].value = value; } }
         else if (fx.type === 'Delay') {
             if (param === 'mix' && fx.nodes.wet && fx.nodes.dry) { fx.nodes.wet.gain.value = value; fx.nodes.dry.gain.value = 1.0 - value; }
             if (param === 'feedback' && fx.nodes.feedback) { fx.nodes.feedback.gain.value = value; }
             if ((param === 'division' || param === 'variant') && fx.nodes.updateDelayTime) { fx.nodes.updateDelayTime(); }
         }
-        else if (fx.type === 'BeatShift' || fx.type === 'BeatScatter') {
-             if (param === 'mix' && fx.nodes.wet && fx.nodes.dry) { fx.nodes.wet.gain.value = value; fx.nodes.dry.gain.value = 1.0 - value; }
+        else if (fx.type === 'Tremolo' || fx.type === 'Slicer') {
              if (param === 'rate' && fx.nodes.lfo) { fx.nodes.lfo.frequency.value = value; }
-             if (param === 'depth' && fx.nodes.depth) { fx.nodes.depth.gain.value = value; }
+             if (param === 'depth' && fx.nodes.lfoDepth && fx.nodes.tremoloGain) { fx.nodes.tremoloGain.gain.value = 1.0 - value; fx.nodes.lfoDepth.gain.value = value; }
         }
     }
 
@@ -2012,13 +2108,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (looper && fx) {
                     fx.params[param] = newValue;
                     updateAudioNodeParam(looper, fx, param, newValue);
-                    const valueFormatFn = (p, v) => v.toFixed(p.match(/q|pan|depth|duration/) ? 2 : 0);
+                    const valueFormatFn = (p, v) => v.toFixed(p.match(/q|pan|depth|duration|feedback/) ? 2 : 0);
                     $(`#fxControlValue${i}`).textContent = valueFormatFn(param, newValue);
 
                     const popupSlider = document.getElementById(popupSliderId);
                     if(popupSlider && document.body.contains(popupSlider)) {
                         popupSlider.value = newValue;
-                        const valueLabel = popupSlider.parentElement.querySelector('span');
+                        const valueLabel = popupSlider.closest('label').querySelector('span span');
                         if(valueLabel) valueLabel.textContent = valueFormatFn(param, newValue);
                     }
                 }
@@ -2165,12 +2261,14 @@ document.addEventListener('DOMContentLoaded', () => {
             fxAssignments[sliderIndex] = null;
             const controlSlider = $(`#fxControlSlider${sliderIndex}`);
             controlSlider.disabled = true;
+            controlSlider.value = 50; controlSlider.min = 0; controlSlider.max = 100;
             $(`#fxControlLabel${sliderIndex}`).textContent = `SLOT ${sliderIndex + 1}: Unassigned`;
             $(`#fxControlValue${sliderIndex}`).textContent = '--';
         } else {
              fxAutomationAssignments[sliderIndex] = null;
             const controlSlider = $(`#autoControlSlider${sliderIndex}`);
             controlSlider.disabled = true;
+            controlSlider.value = 50; controlSlider.min = 0; controlSlider.max = 100;
             $(`#autoControlLabel${sliderIndex}`).textContent = `SLOT ${sliderIndex + 1}: Unassigned`;
             $(`#autoControlValue${sliderIndex}`).textContent = '--';
             $(`#autoLedBtn${sliderIndex}`).classList.remove('active');
@@ -2314,12 +2412,12 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.addEventListener('touchstart', handleMouseDown, { passive: false });
         canvas.addEventListener('touchmove', handleMouseMove, { passive: false });
         canvas.addEventListener('touchend', handleMouseUp);
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
 
         $('#closeAutomationPopup').addEventListener('click', () => popup.classList.add('hidden'));
         $('#resetAutomationBtn').addEventListener('click', () => {
             const firstVal = points.length > 0 ? points[0].v : (assignment.min + assignment.max) / 2;
-            const lastVal = points.length > 1 ? points[points.length-1].v : firstVal;
-            assignment.points = [ {t: 0, v: firstVal}, {t: 1, v: lastVal} ];
+            assignment.points = [ {t: 0, v: firstVal}, {t: 1, v: firstVal} ];
             points = assignment.points;
             redraw();
         });
@@ -2330,11 +2428,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function getInterpolatedValue(points, timeProgress) {
         if (!points || points.length < 2) return (points && points.length === 1) ? points[0].v : 0;
 
-        let p1 = points[0];
-        let p2 = points[points.length-1];
-
         if (timeProgress <= points[0].t) return points[0].v;
         if (timeProgress >= points[points.length-1].t) return points[points.length-1].v;
+
+        let p1 = points[0];
+        let p2 = points[points.length-1];
 
         for (let i = 0; i < points.length - 1; i++) {
             if (timeProgress >= points[i].t && timeProgress <= points[i+1].t) {
